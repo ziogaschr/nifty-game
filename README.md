@@ -10,7 +10,7 @@
 <a target="_blank" href="https://github.com/PortalNetwork/nifty-game/pulls" title="PRs Welcome"><img src="https://img.shields.io/badge/PRs-welcome-blue.svg"></a>
 <img src="https://img.shields.io/hackage-deps/v/lens.svg"/>
 <a target="_blank" href="#"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"/></a>
-</p>  
+</p>
 
 > Non-fungible token game
 
@@ -83,11 +83,7 @@ You can find contract detail under `contracts/` directory:
 
 First install required dependencies:
 
-You'll need local ethereum node, I recommend `ganache-cli`. You can install it from npm.
-
-```
-npm install -g ganache-cli
-```
+You'll need a local ebakus node. Download [Linux](https://www.ebakus.com/builds/ebakus-linux-amd64-v1.9.0-unstable.tar.gz) or [OSX](https://www.ebakus.com/builds/ebakus-darwin-amd64-v1.9.0-unstable.tar.gz) version.
 
 Install truffle:
 
@@ -95,7 +91,7 @@ Install truffle:
 npm install -g truffle
 ```
 
-Then install contract dependencies:  
+Then install contract dependencies:
 
 ```
 npm install
@@ -103,10 +99,10 @@ npm install
 
 ## How To Test
 
-First make sure that local ethereum node is running. Execute:
+First make sure that the local ebakus node is running. Execute:
 
 ```
-ganache-cli --gasLimit 0xffffffffff -p 8545
+ebakus --testnet
 ```
 
 Now you can compile and deploy contracts:
