@@ -5,7 +5,7 @@ import isFetching from './fetchingReducer';
 import health from './healthReducer';
 import simpleToken from './simpleTokenReducer';
 import warning from './warningReducer';
-import metaMask from './metaMaskReducer';
+import ebakus from './ebakusReducer';
 import cryptoHerosToken from './cryptoHerosTokenReducer';
 import cryptoHerosOwned from './cryptoHerosOwnedReducer';
 import cryptoHerosOwnedTokenURI from './cryptoHerosOwnedTokenURIReducer';
@@ -17,7 +17,7 @@ const appReducer = combineReducers({
   health,
   simpleToken,
   warning,
-  metaMask,
+  ebakus,
   cryptoHerosToken,
   cryptoHerosOwned,
   cryptoHerosOwnedTokenURI

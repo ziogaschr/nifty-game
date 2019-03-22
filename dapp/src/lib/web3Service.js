@@ -1,4 +1,4 @@
-export const getProvider = (networkId) => {
+export const getProvider = networkId => {
   switch (networkId) {
     case '1':
       return 'https://mainnet.infura.io/';
@@ -11,9 +11,9 @@ export const getProvider = (networkId) => {
     default:
       return 'http://localhost:8545/';
   }
-}
+};
 
-export const getSimpleTokenAddress = (networkId) => {
+export const getSimpleTokenAddress = networkId => {
   switch (networkId) {
     case '1':
       return '0x0';
@@ -26,9 +26,9 @@ export const getSimpleTokenAddress = (networkId) => {
     default:
       return '0x0';
   }
-}
+};
 
-export const getCryptoHerosTokenAddress = (networkId) => {
+export const getCryptoHerosTokenAddress = networkId => {
   switch (networkId) {
     case '1':
       return '0x0';
@@ -38,12 +38,14 @@ export const getCryptoHerosTokenAddress = (networkId) => {
       return '0x0';
     case '42':
       return '0x0';
+    case '101':
+      return '0x567853Ff4a22226959E155461024FC40EBB602C0';
     default:
       return '0x0';
   }
-}
+};
 
-export const getCryptoHerosGameAddress = (networkId) => {
+export const getCryptoHerosGameAddress = networkId => {
   switch (networkId) {
     case '1':
       return '0x0';
@@ -53,17 +55,19 @@ export const getCryptoHerosGameAddress = (networkId) => {
       return '0x0';
     case '42':
       return '0x0';
+    case '101':
+      return '0x2DfB48dF75632A41db8861295B7220a4721fB74D';
     default:
       return '0x0';
   }
-}
+};
 
-export const getCurrentAddress = (web3) => {
+export const getCurrentAddress = web3 => {
   if (web3 === null) return;
   return web3.eth.accounts[0];
-}
+};
 
-export const getCurrentNetwork = (web3) => {
+export const getCurrentNetwork = web3 => {
   if (web3 === null) return;
   return web3.version.network;
-}
+};

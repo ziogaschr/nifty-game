@@ -62,7 +62,7 @@ You can find contract detail under `contracts/` directory:
 - React
 - Redux
 - Saga
-- Web3(MetaMask)
+- Web3(Ebakus)
 
 ### UI
 - Sass

@@ -1,6 +1,6 @@
 # Nifty game dapp
 
-This is the CryptoHeros dapp. 
+This is the CryptoHeros dapp.
 
 ### Technical stack
 
@@ -8,7 +8,7 @@ This is the CryptoHeros dapp.
 - React
 - Redux
 - Saga
-- Web3(MetaMask)
+- Web3(Ebakus)
 
 #### UI
 - Sass

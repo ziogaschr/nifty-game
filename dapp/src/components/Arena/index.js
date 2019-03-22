@@ -147,9 +147,9 @@ export default class extends React.Component {
 
   // 開始賭
   handlePlaceBet = async e => {
-    const { web3, metaMask, historyGamesCount, } = this.props;
+    const { web3, ebakus, historyGamesCount, } = this.props;
     const { betEth, selectedCardIdx, historyGames, } = this.state;
-    const { account, network } = metaMask;
+    const { account, network } = ebakus;
 
     if (betEth > 1 || betEth < 0.01) {
       this.handleAlertOpen('Your bet should be between 0.01 and 1 eth.');
@@ -160,7 +160,7 @@ export default class extends React.Component {
     this.setState({
       isLoading: true,
     });
-    
+
     const byteData = doCreateSingleGame(network, selectedCard.tokenId);
     const tx = {
       from: account,
@@ -168,7 +168,7 @@ export default class extends React.Component {
       value: this.props.web3.toWei(betEth, 'ether'),
       data: byteData
     };
-    
+
     web3.eth.sendTransaction(tx, (err, response) => {
       if(err) {
         this.handleAlertOpen("Sorry, transaction failed");
@@ -181,7 +181,7 @@ export default class extends React.Component {
       let t = setInterval(async () => {
         const result = await axios.get(`https://api-ropsten.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash=${response}&apikey=RAADZVN65BQA7G839DFN3VHWCZBQMRBR11`)
         if (result.data.status === "1") {
-          
+
           const gameChecker = window.setInterval(async () => {
             const games = await doGetUserSingleGames(network, account);
 
@@ -229,8 +229,8 @@ export default class extends React.Component {
 
   // 看歷史戰鬥
   handleShowHistory = async e => {
-    const { web3, metaMask, } = this.props;
-    const { account, network } = metaMask;
+    const { web3, ebakus, } = this.props;
+    const { account, network } = ebakus;
 
     this.setState({
       isLoading: true,
@@ -273,7 +273,7 @@ export default class extends React.Component {
     const { cards, isShowArena, handleBack, } = this.props;
     const userImages = [user1, user2, user3, user4, user5, user6, user7, user8, user9, user10, user11, user12, user13, user14];
     const selectedCard = cards[selectedCardIdx];
-    
+
 
     if (!selectedCard) {
       return null;
@@ -329,7 +329,7 @@ export default class extends React.Component {
 
               <div className={cx('right')}>
 
-              
+
                 <div className={cx('right-item')}>
                   <a onClick={this.handleShowHistory} style={{position: 'relative'}}>
                     <img className={cx('history-button')} src={historyImg} />
@@ -368,7 +368,7 @@ export default class extends React.Component {
                 <div className={cx('result-center-container', { isSmall: battleResult.isUserSmall })}>
                   { hasBattleResult && battleResult.isWin <= 1 && <img src={bigImg} /> }
                   { hasBattleResult && battleResult.isWin === 2 && <img src={drawImg} /> }
-                </div>          
+                </div>
                 <span className={cx({ big: battleResult.gameType === 1, small: battleResult.gameType === 0})}>
                   {
                     battleResult.gameType === 0 ? 'SMALL WIN' : 'BIG WIN'
@@ -387,7 +387,7 @@ export default class extends React.Component {
             </div>
 
             {
-              hasBattleResult && battleResult.isWin === 0 && 
+              hasBattleResult && battleResult.isWin === 0 &&
               <div className={cx('battle-result-win')}>
                 <div className="start1"></div>
                 <div className="start2"></div>
@@ -463,9 +463,9 @@ export default class extends React.Component {
           isLoading && <LoadingCoin />
         }
 
-        { 
-          this.state.isErrorOpen && 
-          <NiftyAlert 
+        {
+          this.state.isErrorOpen &&
+          <NiftyAlert
             isOpenAlert={this.state.isErrorOpen}
             errorMessage={this.state.errorMessage}
             handleAlertClose={this.handleAlertClose}

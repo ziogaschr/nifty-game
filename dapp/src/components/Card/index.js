@@ -15,12 +15,11 @@ import Dialog, {
 
 const cx = classnames.bind(style);
 
-
 function ipfsUrl(hash) {
   return 'https://ipfs.infura.io/ipfs/' + hash;
 }
 
-const ErrorAlertDialog = (props) => (
+const ErrorAlertDialog = props => (
   <Dialog
     open={props.isOpenAlert}
     onClose={props.handleAlertClose}
@@ -41,127 +40,136 @@ const ErrorAlertDialog = (props) => (
 );
 
 class Card extends Component {
-
   state = {
     doMintTx: '',
     isLoading: false,
     isOpenAlert: false,
     errmsg: '',
-  }
+  };
 
   handleClickAlertOpen = () => {
     this.setState({ isOpenAlert: true });
-  }
+  };
 
   handleAlertClose = () => {
     this.setState({ isOpenAlert: false });
-  }
+  };
 
-  CreateHero = async() =>{
-    const{doMint} = this.props;
+  CreateHero = async () => {
+    const { doMint } = this.props;
     const result = await doMint();
-    this.setState({'doMintTx': result, isLoading: true},()=>{
-      this.handleSubmitMetaMask(this.state.doMintTx);
-    })
-  }
+    this.setState({ doMintTx: result, isLoading: true }, () => {
+      this.handleSubmitEbakus(this.state.doMintTx);
+    });
+  };
 
-  handleSubmitMetaMask =(doMintTx)=>{
-    const {account, network} = this.props.metaMask;
-    const {web3} = this.props;
-    
+  handleSubmitEbakus = doMintTx => {
+    const { account, network } = this.props.ebakus;
+    const { web3 } = this.props;
+
     const msk = {
       from: account,
       to: getCryptoHerosTokenAddress(network),
       value: this.props.web3.toWei(0.01, 'ether'),
-      data: doMintTx
-    }
+      data: doMintTx,
+    };
 
-    web3.eth.sendTransaction(msk, this.handleMetaMaskCallBack);
-    
-  }
+    web3.eth.sendTransaction(msk, this.handleEbakusCallBack);
+  };
 
-  handleMetaMaskCallBack = (err, result)=>{
-
-    if(err) {
-      this.setState({errmsg: 'Sorry, transaction failed'}, ()=> this.setState({isOpenAlert: true}));
-      console.error('MetaMask Error:', err.message);
-      this.setState({isLoading: false});
+  handleEbakusCallBack = (err, result) => {
+    if (err) {
+      this.setState({ errmsg: 'Sorry, transaction failed' }, () =>
+        this.setState({ isOpenAlert: true })
+      );
+      console.error('Ebakus Error:', err.message);
+      this.setState({ isLoading: false });
       return;
     }
 
     const tx = result;
-    let t = setInterval(async ()=>{
-      const result = await axios.get(`https://api-ropsten.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash=${tx}&apikey=RAADZVN65BQA7G839DFN3VHWCZBQMRBR11`);
+    let t = setInterval(async () => {
+      const result = await axios.get(
+        `https://api-ropsten.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash=${tx}&apikey=RAADZVN65BQA7G839DFN3VHWCZBQMRBR11`
+      );
 
-      if(result.data.result.status === "1") {
+      if (result.data.result.status === '1') {
         this.ReloadDataFn();
         window.clearInterval(t);
       }
+    }, 3000);
+  };
 
-    },3000);
-  }
-
-  ReloadDataFn =()=>{
-    const {network, account} = this.props.metaMask;
+  ReloadDataFn = () => {
+    const { network, account } = this.props.ebakus;
     //抓卡牌編號
-    this.props.handleCryptoHerosTokenGetOwnedTokens(network, account, this.props.TimeOutGoTokens);
+    this.props.handleCryptoHerosTokenGetOwnedTokens(
+      network,
+      account,
+      this.props.TimeOutGoTokens
+    );
     setTimeout(() => {
-      this.setState({isLoading: false},()=> this.props.gotoAndPlayGame());
+      this.setState({ isLoading: false }, () => this.props.gotoAndPlayGame());
     }, 6000);
-  }
+  };
 
   render() {
-    const {brandItem, isGetCardPage, closeMyCard} = this.props;
+    const { brandItem, isGetCardPage, closeMyCard } = this.props;
 
-    const alertMsg = this.state.isOpenAlert && 
-      <ErrorAlertDialog 
-        {...this.state} 
+    const alertMsg = this.state.isOpenAlert && (
+      <ErrorAlertDialog
+        {...this.state}
         handleAlertClose={this.handleAlertClose}
-    />;
+      />
+    );
 
     return (
-      <div className={cx('Card', {open: isGetCardPage})}>
-        
-        <div className="cloud_card1"></div>
-        <div className="cloud_card2"></div>
+      <div className={cx('Card', { open: isGetCardPage })}>
+        <div className="cloud_card1" />
+        <div className="cloud_card2" />
 
-        <div className="ui start1"></div>
-        <div className="ui start2"></div>
-        <div className="ui start3"></div>
-        <div className="ui Elf1"></div>
-        <div className="ui Elf2"></div>
-        <div className="ui Elf3"></div>
+        <div className="ui start1" />
+        <div className="ui start2" />
+        <div className="ui start3" />
+        <div className="ui Elf1" />
+        <div className="ui Elf2" />
+        <div className="ui Elf3" />
 
         <div className="cardtitle">
           <img src={cardtitle} />
           <div className="btn_box">
-            <a className="goback" onClick={closeMyCard}></a>
-            <a className="getHero" onClick={this.CreateHero}></a>
+            <a className="goback" onClick={closeMyCard} />
+            <a className="getHero" onClick={this.CreateHero} />
           </div>
         </div>
 
         <div className="c_mid">
-          {
-            brandItem.map((obj, idx)=>{
-              return (
-                <div className="cardBox" key={idx}>
-                  <div className="cardbg">
-                    <div className="s_bgcard" style={{backgroundImage: `url("${ipfsUrl(obj[2])}")` }}></div>
-                    <div className="s_user" style={{backgroundImage: `url("${ipfsUrl(obj[1])}")` } }></div>
-                    <div className="s_number" style={{backgroundImage: `url("${ipfsUrl(obj[3])}")` }}></div>
-                  </div>
+          {brandItem.map((obj, idx) => {
+            return (
+              <div className="cardBox" key={idx}>
+                <div className="cardbg">
+                  <div
+                    className="s_bgcard"
+                    style={{ backgroundImage: `url("${ipfsUrl(obj[2])}")` }}
+                  />
+                  <div
+                    className="s_user"
+                    style={{ backgroundImage: `url("${ipfsUrl(obj[1])}")` }}
+                  />
+                  <div
+                    className="s_number"
+                    style={{ backgroundImage: `url("${ipfsUrl(obj[3])}")` }}
+                  />
                 </div>
-              )
-            })
-          }
-          <div className='addCardBtn'>
-            <a onClick={this.CreateHero}></a>
+              </div>
+            );
+          })}
+          <div className="addCardBtn">
+            <a onClick={this.CreateHero} />
           </div>
-        </div>  
-        {
-          this.state.isLoading && <LoadingCoin/>
-        }
-        { alertMsg }
+        </div>
+        {this.state.isLoading && <LoadingCoin />}
+        {alertMsg}
       </div>
     );
   }

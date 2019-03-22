@@ -12,7 +12,7 @@ export default {
     message: '',
     open: false
   },
-  metaMask: {
+  ebakus: {
     account: null,
     network: null
   },
@@ -22,4 +22,4 @@ export default {
   },
   cryptoHerosOwned: [],
   cryptoHerosOwnedTokenURI: {}
-}; 
+};
