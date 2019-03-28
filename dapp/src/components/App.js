@@ -110,7 +110,7 @@ class App extends Component {
 
     const { network, account } = this.props.ebakus;
     const result = await doGetOwnedTokens(network, account);
-    const cardsPromises = result.map(cur => doGetTokenProperty(network, cur.c));
+    const cardsPromises = result.map(cur => doGetTokenProperty(network, cur));
     const brandItem = await Promise.all(cardsPromises);
 
     this.setState({
@@ -151,11 +151,11 @@ class App extends Component {
       return;
     }
 
-    const cardsPromises = result.map(cur => doGetTokenProperty(network, cur.c));
+    const cardsPromises = result.map(cur => doGetTokenProperty(network, cur));
     const detailResult = await Promise.all(cardsPromises);
     const userOwnCards = detailResult.map((cur, idx) => {
       return {
-        tokenId: result[idx],
+        tokenId: cur['0'],
         roleImg: cur['1'],
         numberImg: cur['3'],
         bgImg: cur['2'],
