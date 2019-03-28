@@ -221,28 +221,28 @@ const cryptoHerosGameInterface = [
 
 function CryptoHerosGame(web3, address) {
   this.web3 = web3;
-  const cryptoHerosGameContract = web3.eth.contract(cryptoHerosGameInterface);
-  this.cryptoHerosGamePromise = Promise.resolve(Promise.promisifyAll(cryptoHerosGameContract.at(address)));
+  this.contractAddress = address;
+  const cryptoHerosGameContract = new web3.eth.Contract(
+    cryptoHerosGameInterface,
+    address
+  );
+  this.cryptoHerosGameContract = cryptoHerosGameContract;
 }
 
-CryptoHerosGame.prototype.createSingleGame = function (tokenId, callback) {
-  let byteData = "0x" +
-    abi.methodID("createSingleGame", ["uint"]).toString("hex") +
-    abi.rawEncode(["uint"],
-      [tokenId]).toString("hex");
-  return byteData;
+CryptoHerosGame.prototype.createSingleGame = function(tokenId, callback) {
+  return this.cryptoHerosGameContract.methods
+    .createSingleGame(tokenId)
+    .encodeABI();
 }
-
-CryptoHerosGame.prototype.getUserSingleGames = function (address, callback) {
-  return this.cryptoHerosGamePromise.then(function (cryptoHerosGame) {
-    return cryptoHerosGame.getUserSingleGamesAsync(address);
-  });
+CryptoHerosGame.prototype.getUserSingleGames = function(address, callback) {
+  return this.cryptoHerosGameContract.methods
+    .getUserSingleGames(address)
+    .call({ from: this.contractAddress });
 }
-
-CryptoHerosGame.prototype.singleGames = function (gameId, callback) {
-  return this.cryptoHerosGamePromise.then(function (cryptoHerosGame) {
-    return cryptoHerosGame.singleGamesAsync(gameId);
-  })
-}
+CryptoHerosGame.prototype.singleGames = function(gameId, callback) {
+  return this.cryptoHerosGameContract.methods
+    .singleGames(gameId)
+    .call({ from: this.contractAddress });
+};
 
 module.exports = CryptoHerosGame;

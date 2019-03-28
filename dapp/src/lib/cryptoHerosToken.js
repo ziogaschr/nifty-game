@@ -784,54 +784,58 @@ const cryptoHerosTokenInterface = [
 
 function CryptoHerosToken(web3, address) {
   this.web3 = web3;
-  const cryptoHerosTokenContract = web3.eth.contract(cryptoHerosTokenInterface);
-  this.cryptoHerosTokenPromise = Promise.resolve(Promise.promisifyAll(cryptoHerosTokenContract.at(address)));
+  this.contractAddress = address;
+  const cryptoHerosTokenContract = new web3.eth.Contract(
+    cryptoHerosTokenInterface,
+    address,
+  );
+  this.cryptoHerosTokenContract = cryptoHerosTokenContract;
 }
 
-CryptoHerosToken.prototype.name = function (callback) {
-  return this.cryptoHerosTokenPromise.then(function (cryptoHerosToken) {
-    return cryptoHerosToken.nameAsync();
-  });
-}
+CryptoHerosToken.prototype.name = function(callback) {
+  return this.cryptoHerosTokenContract.methods
+    .name()
+    .call({ from: this.contractAddress });
 
-CryptoHerosToken.prototype.symbol = function (callback) {
-  return this.cryptoHerosTokenPromise.then(function (cryptoHerosToken) {
-    return cryptoHerosToken.symbolAsync();
-  });
 }
+CryptoHerosToken.prototype.symbol = function(callback) {
+  return this.cryptoHerosTokenContract.methods
+    .symbol()
+    .call({ from: this.contractAddress });
 
-CryptoHerosToken.prototype.ownerOf = function (tokenId, callback) {
-  return this.cryptoHerosTokenPromise.then(function (cryptoHerosToken) {
-    return cryptoHerosToken.ownerOfAsync(tokenId);
-  });
 }
+CryptoHerosToken.prototype.ownerOf = function(tokenId, callback) {
+  return this.cryptoHerosTokenContract.methods
+    .ownerOf(tokenId)
+    .call({ from: this.contractAddress });
 
-CryptoHerosToken.prototype.getTokenProperty = function (tokenId, callback) {
-  return this.cryptoHerosTokenPromise.then(function (cryptoHerosToken) {
-    return cryptoHerosToken.getTokenPropertyAsync(tokenId);
-  });
 }
+CryptoHerosToken.prototype.getTokenProperty = function(tokenId, callback) {
+  return this.cryptoHerosTokenContract.methods
+    .getTokenProperty(tokenId)
+    .call({ from: this.contractAddress });
 
-CryptoHerosToken.prototype.transferOwnership = function (address, callback) {
-  return this.cryptoHerosTokenPromise.then(function (cryptoHerosToken) {
-    return cryptoHerosToken.transferOwnershipAsync(address);
-  });
 }
+CryptoHerosToken.prototype.transferOwnership = function(address, callback) {
+  return this.cryptoHerosTokenContract.methods
+    .transferOwnership(address)
+    .call({ from: this.contractAddress });
 
-CryptoHerosToken.prototype.getOwnedTokens = function (address, callback) {
-  return this.cryptoHerosTokenPromise.then(function (cryptoHerosToken) {
-    return cryptoHerosToken.getOwnedTokensAsync(address);
-  });
 }
+CryptoHerosToken.prototype.getOwnedTokens = function(address, callback) {
+  return this.cryptoHerosTokenContract.methods
+    .getOwnedTokens(address)
+    .call({ from: this.contractAddress });
+};
 
-CryptoHerosToken.prototype.getHerosLength = function (callback) {
-  return this.cryptoHerosTokenPromise.then(function (cryptoHerosToken) {
-    return cryptoHerosToken.getHerosLengthAsync();
-  });
-}
+CryptoHerosToken.prototype.getHerosLength = function(callback) {
+  return this.cryptoHerosTokenContract.methods
+    .getHerosLength()
+    .call({ from: this.contractAddress });
+};
 
-CryptoHerosToken.prototype.mint = function () {
-  let byteData = "0x" + abi.methodID("mint", []).toString("hex");
+CryptoHerosToken.prototype.mint = function() {
+  let byteData = '0x' + abi.methodID('mint', []).toString('hex');
   return byteData;
 }
 

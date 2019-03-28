@@ -1,7 +1,7 @@
 import React from 'react';
 import classnames from 'classnames/bind';
 import style from './Arena.css';
-import { TweenMax, } from "gsap/TweenMax";
+import { TweenMax } from 'gsap/TweenMax';
 import BattleCard from '../BattleCard';
 import Loading from '../Loading';
 import LoadingCoin from '../LoadingCoin';
@@ -31,9 +31,13 @@ import user12 from '../../images/user/user12.png';
 import user13 from '../../images/user/user13.png';
 import user14 from '../../images/user/user14.png';
 import { getCryptoHerosGameAddress } from '../../lib/web3Service';
-import { doCreateSingleGame, doGetUserSingleGames, getSingleGame, } from '../../lib/cryptoHerosGameService';
+import {
+  doCreateSingleGame,
+  doGetUserSingleGames,
+  getSingleGame,
+} from '../../lib/cryptoHerosGameService';
 import axios from 'axios';
-import NiftyAlert from "../NiftyAlert";
+import NiftyAlert from '../NiftyAlert';
 
 const NUMBER_IMAGES = [
   'QmNbPeXSeUEg6oEhRVFa5uSwVdi8GbXewttkVKf3zX2oyX',
@@ -165,8 +169,8 @@ export default class extends React.Component {
     const tx = {
       from: account,
       to: getCryptoHerosGameAddress(network),
-      value: this.props.web3.toWei(betEth, 'ether'),
-      data: byteData
+      value: this.props.web3.utils.toWei(String(betEth), 'ether'),
+      data: byteData,
     };
 
     web3.eth.sendTransaction(tx, (err, response) => {
@@ -229,7 +233,7 @@ export default class extends React.Component {
 
   // 看歷史戰鬥
   handleShowHistory = async e => {
-    const { web3, ebakus, } = this.props;
+    const { web3, ebakus } = this.props;
     const { account, network } = ebakus;
 
     this.setState({

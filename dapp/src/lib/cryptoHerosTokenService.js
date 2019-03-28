@@ -7,8 +7,8 @@ let web3 = new Web3();
 let cryptoHerosTokenAddress = '0x0';
 let cryptoHerosToken = null;
 
-const setWeb3Provider = (networkId) => {
-  web3.setProvider(new web3.providers.HttpProvider(getProvider(networkId)));
+const setWeb3Provider = networkId => {
+  web3.setProvider(new Web3(getProvider(networkId)));
   cryptoHerosTokenAddress = getCryptoHerosTokenAddress(networkId);
   cryptoHerosToken = new CryptoHerosToken(web3, cryptoHerosTokenAddress);
 }

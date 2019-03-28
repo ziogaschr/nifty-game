@@ -9,13 +9,13 @@ const fetchNetwork = (state, action) => {
   return { account: state.account, network: action.network };
 };
 
-export default function(ebakus = initialState.ebakus, action) {
+export default function(state = initialState.ebakus, action) {
   switch (action.type) {
     case types.EBAKUS_ACCOUNT:
-      return fetchAccount(ebakus, action);
+      return fetchAccount(state, action);
     case types.EBAKUS_NETWORK:
-      return fetchNetwork(ebakus, action);
+      return fetchNetwork(state, action);
     default:
-      return ebakus;
+      return state;
   }
 }
