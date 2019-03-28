@@ -155,7 +155,7 @@ class App extends Component {
     const detailResult = await Promise.all(cardsPromises);
     const userOwnCards = detailResult.map((cur, idx) => {
       return {
-        tokenId: result[idx].c[0],
+        tokenId: result[idx],
         roleImg: cur['1'],
         numberImg: cur['3'],
         bgImg: cur['2'],
@@ -164,13 +164,13 @@ class App extends Component {
 
     const games = await doGetUserSingleGames(network, account);
     const gamePromises = games.map(cur =>
-      getSingleGame(network, cur.c[0], account)
+      getSingleGame(network, cur, account)
     );
     const gameDetails = await Promise.all(gamePromises);
     const historyGames = gameDetails.map(game => {
       return {
-        userBet: game[3].c[0] / 10000,
-        isWin: game[5].c[0],
+        userBet: game[3] / 10000,
+        isWin: game[5],
       };
     });
 

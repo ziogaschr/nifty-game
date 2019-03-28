@@ -196,14 +196,14 @@ export default class extends React.Component {
               return;
             }
             window.clearInterval(gameChecker);
-            const gamePromises = games.map(cur => getSingleGame(network, cur.c[0], account));
+            const gamePromises = games.map(cur => getSingleGame(network, cur, account));
             const gameDetails = await Promise.all(gamePromises);
             const thisGame = gameDetails[gameDetails.length - 1];
-            const userPointer = thisGame[1].c[0];
-            const contractPointer = thisGame[2].c[0];
-            const userBet = thisGame[3].c[0];
-            const gameType = thisGame[4].c[0]; // 0 = small win 1 = big win
-            const isWin = thisGame[5].c[0];    // 0 win, 1 lost, 2 平手
+            const userPointer = thisGame[1];
+            const contractPointer = thisGame[2];
+            const userBet = thisGame[3];
+            const gameType = thisGame[4]; // 0 = small win 1 = big win
+            const isWin = thisGame[5];    // 0 win, 1 lost, 2 平手
             const isUserSmall = userPointer < contractPointer;
 
             const battleResult = {
@@ -241,13 +241,13 @@ export default class extends React.Component {
     });
 
     const games = await doGetUserSingleGames(network, account);
-    const gamePromises = games.map(cur => getSingleGame(network, cur.c[0], account));
+    const gamePromises = games.map(cur => getSingleGame(network, cur, account));
     const gameDetails = await Promise.all(gamePromises);
 
     const historyGames = gameDetails.map(game => {
       return ({
-        userBet: game[3].c[0] / 10000,
-        isWin: game[5].c[0],
+        userBet: game[3] / 10000,
+        isWin: game[5],
       });
     });
 

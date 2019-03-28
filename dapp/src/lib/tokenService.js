@@ -6,8 +6,8 @@ const Web3 = require('web3');
 let web3 = new Web3();
 let simpleTokenAddress = '0x0';
 
-const setWeb3Provider = (networkId) => {
-  web3.setProvider(new web3.providers.HttpProvider(getProvider(networkId)));
+const setWeb3Provider = networkId => {
+  web3.setProvider(new Web3(getProvider(networkId)));
   simpleTokenAddress = getSimpleTokenAddress(networkId);
 }
 

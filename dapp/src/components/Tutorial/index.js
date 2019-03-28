@@ -104,7 +104,7 @@ export default class extends React.Component {
           <p>
             You can view our smart contract at our{' '}
             <a
-              href="https://github.com/PortalNetwork/nifty-game"
+              href="https://github.com/ziogaschr/nifty-game"
               target="_blank"
             >
               github
