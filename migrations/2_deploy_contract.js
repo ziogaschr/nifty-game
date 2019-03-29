@@ -5,9 +5,9 @@ const fs = require("fs");
 const path = require("path");
 const writeFile = util.promisify(fs.writeFile);
 
-  const cryptoHerosToken = await deployer.deploy(CryptoHerosToken, "CryptoHerosToken", "HERO");
-  const cryptoHerosGame = await deployer.deploy(CryptoHerosGame, CryptoHerosToken.address);
-module.exports = async function(deployer, network, account) {
+module.exports = async function(deployer) {
+  await deployer.deploy(CryptoHerosToken, 'CryptoHerosToken', 'HERO');
+  await deployer.deploy(CryptoHerosGame, CryptoHerosToken.address);
 
   console.log('CryptoHerosToken address: ', CryptoHerosToken.address);
   console.log('CryptoHerosGame address: ', CryptoHerosGame.address);
@@ -15,7 +15,6 @@ module.exports = async function(deployer, network, account) {
   // Add initial balance to game contract
   const gameInstance = await CryptoHerosGame.deployed();
   await gameInstance.sendTransaction({
-    // from: web3.eth.defaultAccount,
     value: web3.utils.toWei('10', 'ether'),
   });
 
@@ -131,8 +130,6 @@ module.exports = async function(deployer, network, account) {
     await tokenInstance.initNumberAndDescription(id, card[0]);
     console.log('Created new card: ' + id);
   }
-
-
 
   // const addresses = {
   //   tokenAddress: CryptoHerosToken.address
