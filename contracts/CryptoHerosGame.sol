@@ -69,7 +69,7 @@ contract CryptoHerosGame is Ownable {
 
     maxSingleGameId = singleGames.push(_singleGame) - 1;
 
-    uint256[] userSingleGames = usersSingleGames[msg.sender];
+    uint256[] storage userSingleGames = usersSingleGames[msg.sender];
     userSingleGames.push(maxSingleGameId);
 
     return maxSingleGameId;
@@ -85,7 +85,7 @@ contract CryptoHerosGame is Ownable {
 
   function rand(uint min, uint max) private returns (uint){
     nonce++;
-    return uint(sha3(nonce))%(min+max)-min;
+    return uint(keccak256(nonce))%(min+max)-min;
   }
 
   function withdraw(uint amount) public payable onlyOwner returns(bool) {

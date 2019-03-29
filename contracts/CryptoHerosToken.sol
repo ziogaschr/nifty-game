@@ -83,7 +83,7 @@ contract CryptoHerosToken is ERC721Token, Ownable {
 
   function rand(uint min, uint max) private returns (uint){
     nonce++;
-    return uint(sha3(nonce))%(min+max)-min;
+    return uint(keccak256(nonce))%(min+max)-min;
   }
 
   function getHerosLength() external view returns (uint) {
@@ -91,7 +91,7 @@ contract CryptoHerosToken is ERC721Token, Ownable {
   }
 
   function withdraw(uint amount) public payable onlyOwner returns(bool) {
-    require(amount <= this.balance);
+    require(amount <= address(this).balance);
     owner.transfer(amount);
     return true;
   }
