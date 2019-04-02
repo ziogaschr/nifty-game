@@ -10,7 +10,7 @@ import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
  */
 contract CryptoHerosToken is ERC721Token, Ownable {
   mapping (uint256 => address) internal tokenOwner;
-  uint constant minPrice = 0.01 ether;
+  uint constant minPrice = 0.00 ether;
 
   string[] public images;
   string[] public backgrounds;
@@ -26,9 +26,9 @@ contract CryptoHerosToken is ERC721Token, Ownable {
 
   uint nonce = 0;
   Hero[] public heros;
-  
+
   mapping(uint256 => Hero) public tokenProperty;
-  
+
   constructor(string name, string symbol) public
     ERC721Token(name, symbol)
   { }
@@ -95,5 +95,5 @@ contract CryptoHerosToken is ERC721Token, Ownable {
     owner.transfer(amount);
     return true;
   }
-  
+
 }

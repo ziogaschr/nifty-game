@@ -70,7 +70,7 @@ class Card extends Component {
     const msk = {
       from: account,
       to: getCryptoHerosTokenAddress(network),
-      value: this.props.web3.utils.toWei('0.01', 'ether'),
+      // value: this.props.web3.utils.toWei('0.01', 'ether'),
       data: doMintTx,
     };
 
