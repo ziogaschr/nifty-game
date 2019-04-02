@@ -155,7 +155,7 @@ class App extends Component {
     const detailResult = await Promise.all(cardsPromises);
     const userOwnCards = detailResult.map((cur, idx) => {
       return {
-        tokenId: cur['0'],
+        tokenId: result[idx],
         roleImg: cur['1'],
         numberImg: cur['3'],
         bgImg: cur['2'],
