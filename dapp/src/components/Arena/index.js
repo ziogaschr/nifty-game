@@ -331,7 +331,7 @@ export default class extends React.Component {
                   <label className={cx('select_card_field')} htmlFor="select-card">
                     <select id="select-card" value={selectedCardIdx} onChange={this.handleSelectChange}>
                       {
-                        cards.map((card, idx) => (<option key={idx} value={idx}>{card.tokenId}</option>))
+                        cards.map((card, idx) => (<option key={idx} value={idx}>Card {card.tokenId}</option>))
                       }
                     </select>
                   </label>
@@ -368,8 +368,8 @@ export default class extends React.Component {
                 </div>
                 <div className="texttotu">
                     <p>Choose a card to play for the round.</p><br/>
-                    <p>Your bet should be between 0.01 - 1 ETH.</p><br/>
-                    <p>Once you place the bet, system will randomly decide whether card with larger number or smaller number wins the round. At the same time our game bot will randomly generate a number to compete with you. Everything is completely random and you can check our code <a href="https://github.com/PortalNetwork/nifty-game" target="_blank">here!</a></p><br/>
+                    <p>Your bet should be between 0.01 - 1 EBK.</p><br/>
+                    <p>Once you place the bet, system will randomly decide whether card with larger number or smaller number wins the round. At the same time our game bot will randomly generate a number to compete with you. Everything is completely random and you can check our code <a href="https://github.com/ziogaschr/nifty-game" target="_blank">here!</a></p><br/>
                     <p>Depending on the round, card with larger or smaller number will be the winner.</p><br/>
                     <p>Winner of the game will win 150% of the bet put in</p><br/>
                     <p>Happy playing!</p>
@@ -398,11 +398,11 @@ export default class extends React.Component {
               <div className={cx('center')}>
                 <div className={cx('result-center-container', { isSmall: battleResult.isUserSmall })}>
                   { hasBattleResult && battleResult.isWin <= 1 && <img src={bigImg} /> }
-                  { hasBattleResult && battleResult.isWin === 2 && <img src={drawImg} /> }
+                  { hasBattleResult && battleResult.isWin == 2 && <img src={drawImg} /> }
                 </div>
-                <span className={cx({ big: battleResult.gameType === 1, small: battleResult.gameType === 0})}>
+                <span className={cx({ big: battleResult.gameType == 1, small: battleResult.gameType == 0})}>
                   {
-                    battleResult.gameType === 0 ? 'SMALL WIN' : 'BIG WIN'
+                    battleResult.gameType == 0 ? 'SMALL WIN' : 'BIG WIN'
                   }
                 </span>
               </div>
@@ -418,7 +418,7 @@ export default class extends React.Component {
             </div>
 
             {
-              hasBattleResult && battleResult.isWin === 0 &&
+              hasBattleResult && battleResult.isWin == 0 &&
               <div className={cx('battle-result-win')}>
                 <div className="start1"></div>
                 <div className="start2"></div>
@@ -431,7 +431,7 @@ export default class extends React.Component {
             }
 
             {
-              hasBattleResult && battleResult.isWin === 1 &&
+              hasBattleResult && battleResult.isWin == 1 &&
               <div className={cx('battle-result-lose')}>
                 <div className="ghost1"></div>
                 <div className="ghost2"></div>
@@ -440,7 +440,7 @@ export default class extends React.Component {
             }
 
             {
-              hasBattleResult && battleResult.isWin === 2 &&
+              hasBattleResult && battleResult.isWin == 2 &&
               <div className={cx('battle-result-win')}>
                 <img className={cx('win')} src={drawMsgImg} />
               </div>
