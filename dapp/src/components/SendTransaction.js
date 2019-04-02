@@ -9,21 +9,16 @@ class SendTransaction extends Component {
 
   handleSubmit() {
     let self = this;
-    this.props.web3.eth.sendTransaction(
-      {
+
+    this.props.ebakusWallet
+      .sendTransaction({
         from: this.props.ebakus.account,
         to: this.props.ebakus.account,
         value: this.props.web3.toWei(1, 'ether'),
         data: 'dead',
-      },
-      function(err, result) {
-        if (err) {
-          self.props.handleWarningOpen(err.message);
-        } else {
-          self.props.handleWarningOpen(result);
-        }
-      }
-    );
+      })
+      .then(result => self.props.handleWarningOpen(result))
+      .catch(err => self.props.handleWarningOpen(err.message));
   }
 
   render() {

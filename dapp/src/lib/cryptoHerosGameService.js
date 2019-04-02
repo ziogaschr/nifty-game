@@ -1,16 +1,12 @@
 import { getProvider, getCryptoHerosGameAddress } from './web3Service';
 import CryptoHerosGame from './cryptoHerosGame';
 
-const Web3 = require('web3');
-
-let web3 = new Web3();
 let cryptoHerosGameAddress = '0x0';
 let cryptoHerosGame = null;
 
 const setWeb3Provider = (networkId) => {
-  web3.setProvider(new Web3(getProvider(networkId)));
   cryptoHerosGameAddress = getCryptoHerosGameAddress(networkId);
-  cryptoHerosGame = new CryptoHerosGame(web3, cryptoHerosGameAddress);
+  cryptoHerosGame = new CryptoHerosGame(window.web3, cryptoHerosGameAddress);
 }
 
 export const doCreateSingleGame = (networkId, tokenId) => {

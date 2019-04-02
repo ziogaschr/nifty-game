@@ -1,16 +1,12 @@
 import { getProvider, getCryptoHerosTokenAddress } from './web3Service';
 import CryptoHerosToken from './cryptoHerosToken';
 
-const Web3 = require('web3');
-
-let web3 = new Web3();
 let cryptoHerosTokenAddress = '0x0';
 let cryptoHerosToken = null;
 
 const setWeb3Provider = networkId => {
-  web3.setProvider(new Web3(getProvider(networkId)));
   cryptoHerosTokenAddress = getCryptoHerosTokenAddress(networkId);
-  cryptoHerosToken = new CryptoHerosToken(web3, cryptoHerosTokenAddress);
+  cryptoHerosToken = new CryptoHerosToken(window.web3, cryptoHerosTokenAddress);
 }
 
 export const getName = (networkId) => {

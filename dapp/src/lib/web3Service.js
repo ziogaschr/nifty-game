@@ -8,8 +8,19 @@ export const getProvider = networkId => {
       return 'https://rinkeby.infura.io/';
     case '42':
       return 'https://kovan.infura.io/';
+    case 101:
+      return 'wss://nodepow.ebakus.com/';
     default:
       return 'http://localhost:8545/';
+  }
+};
+
+export const getRPCProvider = networkId => {
+  switch (networkId) {
+    case 101:
+      return 'https://nodepowrpc.ebakus.com';
+    default:
+      return getProvider(networkId);
   }
 };
 
@@ -38,8 +49,8 @@ export const getCryptoHerosTokenAddress = networkId => {
       return '0x0';
     case '42':
       return '0x0';
-    case '101':
-      return '0x567853Ff4a22226959E155461024FC40EBB602C0';
+    case 101:
+      return '0x04eAa3592a5C23b5415eb8Ab1aFabA8b30D867B6';
     default:
       return '0x0';
   }
@@ -55,8 +66,8 @@ export const getCryptoHerosGameAddress = networkId => {
       return '0x0';
     case '42':
       return '0x0';
-    case '101':
-      return '0x2DfB48dF75632A41db8861295B7220a4721fB74D';
+    case 101:
+      return '0xCE51DD657cD15AB88FCC0Fa637D3D4AD97D8F6a3';
     default:
       return '0x0';
   }

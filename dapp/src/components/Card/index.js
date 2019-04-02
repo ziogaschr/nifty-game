@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import classnames from 'classnames/bind';
 import cardtitle from '../../images/cardtitle.png';
 import style from './Card.css';
-import { getCryptoHerosTokenAddress } from '../../lib/web3Service';
+import { getRPCProvider, getCryptoHerosTokenAddress } from '../../lib/web3Service';
 import axios from 'axios';
 import LoadingCoin from '../LoadingCoin';
 import Button from 'material-ui/Button';
@@ -63,7 +63,7 @@ class Card extends Component {
     });
   };
 
-  handleSubmitEbakus = doMintTx => {
+  handleSubmitEbakus = async doMintTx => {
     const { account, network } = this.props.ebakus;
     const { web3 } = this.props;
 
@@ -74,30 +74,49 @@ class Card extends Component {
       data: doMintTx,
     };
 
-    web3.eth.sendTransaction(msk, this.handleEbakusCallBack);
+    const gas = await web3.eth.estimateGas(msk);
+    msk.gas = gas;
+
+    this.props.ebakusWallet
+      .sendTransaction(msk)
+      .then(res => {
+        this.handleEbakusCallBack(null, res);
+      })
+      .catch(err => {
+        this.handleEbakusCallBack(err, null);
+      });
   };
 
   handleEbakusCallBack = (err, result) => {
+    const {  network } = this.props.ebakus;
+
     if (err) {
-      this.setState({ errmsg: 'Sorry, transaction failed' }, () =>
+      let errmsg = 'Sorry, transaction failed'
+      if (err === 'no_funds') {
+        errmsg ='Not enough funds. Please add some funds and try again.'
+      }
+      this.setState({ errmsg }, () =>
         this.setState({ isOpenAlert: true })
       );
-      console.error('Ebakus Error:', err.message);
+      console.error('Ebakus Error:', err);
       this.setState({ isLoading: false });
       return;
     }
 
     const tx = result;
     let t = setInterval(async () => {
-      const result = await axios.get(
-        `https://api-ropsten.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash=${tx}&apikey=RAADZVN65BQA7G839DFN3VHWCZBQMRBR11`
-      );
+      const result = await axios.post(getRPCProvider(network), {
+        method: 'eth_getTransactionReceipt',
+        params: [tx.transactionHash],
+        id: 1,
+        jsonrpc: '2.0',
+      });
 
-      if (result.data.result.status === '1') {
+      if (result.data.result.status === '0x1') {
         this.ReloadDataFn();
         window.clearInterval(t);
       }
-    }, 3000);
+    }, 500);
   };
 
   ReloadDataFn = () => {

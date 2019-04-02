@@ -26,6 +26,8 @@ import NiftyAlert from './NiftyAlert';
 class App extends Component {
   state = {
     web3: null,
+    ebakus: null,
+    ebakusWallet: null,
     brand: [],
     brandItem: [],
     isLoading: true,
@@ -42,6 +44,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.setWeb3 = this.setWeb3.bind(this);
+    this.setEbakusWallet = this.setEbakusWallet.bind(this);
   }
 
   handleAlertOpen = errmag => {
@@ -80,6 +83,9 @@ class App extends Component {
 
   setWeb3(web3) {
     this.setState({ web3 });
+  }
+  setEbakusWallet(ebakusWallet) {
+    this.setState({ ebakusWallet });
   }
 
   Elffn = e => {
@@ -243,7 +249,12 @@ class App extends Component {
             <a className="showTutorial" onClick={this.handleOpenTutorial} />
           </div>
           <IndexUi />
-          <Ebakus {...this.props} {...this.state} setWeb3={this.setWeb3} />
+          <Ebakus
+            {...this.props}
+            {...this.state}
+            setWeb3={this.setWeb3}
+            setEbakusWallet={this.setEbakusWallet}
+          />
           <Warning {...this.props} />
           {this.state.isErrorOpen && (
             <NiftyAlert

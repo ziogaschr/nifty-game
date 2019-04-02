@@ -30,7 +30,7 @@ import user11 from '../../images/user/user11.png';
 import user12 from '../../images/user/user12.png';
 import user13 from '../../images/user/user13.png';
 import user14 from '../../images/user/user14.png';
-import { getCryptoHerosGameAddress } from '../../lib/web3Service';
+import { getRPCProvider, getCryptoHerosGameAddress } from '../../lib/web3Service';
 import {
   doCreateSingleGame,
   doGetUserSingleGames,
@@ -169,67 +169,94 @@ export default class extends React.Component {
     const tx = {
       from: account,
       to: getCryptoHerosGameAddress(network),
-      value: this.props.web3.utils.toWei(String(betEth), 'ether'),
+      value: web3.utils.toWei(String(betEth), 'ether'),
       data: byteData,
     };
 
-    web3.eth.sendTransaction(tx, (err, response) => {
-      if(err) {
-        this.handleAlertOpen("Sorry, transaction failed");
+    try {
+      const gas = await web3.eth.estimateGas(tx);
+      tx.gas = gas;
+    } catch (e) {
+      console.error(e);
+      this.handleAlertOpen('Sorry, transaction failed');
+      this.setState({
+        isLoading: false,
+      });
+      return;
+    }
+
+    this.props.ebakusWallet
+      .sendTransaction(tx)
+      .then(response => {
+        let t = setInterval(async () => {
+          const result = await axios.post(getRPCProvider(network), {
+            method: 'eth_getTransactionReceipt',
+            params: [response.transactionHash],
+            id: 1,
+            jsonrpc: '2.0',
+          });
+
+          if (result.data.result.status === '0x1') {
+            const gameChecker = window.setInterval(async () => {
+              const games = await doGetUserSingleGames(network, account);
+              //FIXME: 透過 user 戰鬥場數來判斷此役戰鬥在合約中是否已確實完成
+              //       但礙於組建設計不良, 生命週期混亂, 只能透過在 App.js 取得的 historyGamesCount
+              //       以及本地取得的 historyGames 做雙重判斷, 之後需要更改
+              if (
+                games.length <= historyGames.length ||
+                games.length <= historyGamesCount
+              ) {
+                return;
+              }
+              window.clearInterval(gameChecker);
+              const gamePromises = games.map(cur =>
+                getSingleGame(network, cur, account)
+              );
+              const gameDetails = await Promise.all(gamePromises);
+              const thisGame = gameDetails[gameDetails.length - 1];
+              const userPointer = thisGame[1];
+              const contractPointer = thisGame[2];
+              const userBet = thisGame[3];
+              const gameType = thisGame[4]; // 0 = small win 1 = big win
+              const isWin = thisGame[5]; // 0 win, 1 lost, 2 平手
+              const isUserSmall = userPointer < contractPointer;
+
+              const battleResult = {
+                userPointer,
+                contractPointer,
+                userBet,
+                isUserSmall,
+                gameType,
+                isWin,
+              };
+
+              window.setTimeout(() => {
+                this.setState({
+                  isLoading: false,
+                  isShowResult: true,
+                  isShowHistory: false,
+                  hasBattleResult: true,
+                  battleResult,
+                });
+              }, 0);
+            }, 500);
+            window.clearInterval(t);
+          }
+        }, 500);
+      })
+      .catch(err => {
+        let errmsg = 'Sorry, transaction failed'
+        if (err === 'no_funds') {
+          errmsg ='Not enough funds. Please add some funds and try again.'
+        }
+
+        this.handleAlertOpen(errmsg);
         this.setState({
           isLoading: false,
         });
         return;
-      }
-
-      let t = setInterval(async () => {
-        const result = await axios.get(`https://api-ropsten.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash=${response}&apikey=RAADZVN65BQA7G839DFN3VHWCZBQMRBR11`)
-        if (result.data.status === "1") {
-
-          const gameChecker = window.setInterval(async () => {
-            const games = await doGetUserSingleGames(network, account);
-
-            //FIXME: 透過 user 戰鬥場數來判斷此役戰鬥在合約中是否已確實完成
-            //       但礙於組建設計不良, 生命週期混亂, 只能透過在 App.js 取得的 historyGamesCount
-            //       以及本地取得的 historyGames 做雙重判斷, 之後需要更改
-            if(games.length <= historyGames.length || games.length <= historyGamesCount) {
-              return;
-            }
-            window.clearInterval(gameChecker);
-            const gamePromises = games.map(cur => getSingleGame(network, cur, account));
-            const gameDetails = await Promise.all(gamePromises);
-            const thisGame = gameDetails[gameDetails.length - 1];
-            const userPointer = thisGame[1];
-            const contractPointer = thisGame[2];
-            const userBet = thisGame[3];
-            const gameType = thisGame[4]; // 0 = small win 1 = big win
-            const isWin = thisGame[5];    // 0 win, 1 lost, 2 平手
-            const isUserSmall = userPointer < contractPointer;
-
-            const battleResult = {
-              userPointer,
-              contractPointer,
-              userBet,
-              isUserSmall,
-              gameType,
-              isWin,
-            };
-
-            window.setTimeout(() => {
-              this.setState({
-                isLoading: false,
-                isShowResult: true,
-                isShowHistory: false,
-                hasBattleResult: true,
-                battleResult,
-              });
-            }, 0);
-          }, 1234);
-          window.clearInterval(t);
-        }
-      }, 3000);
-    });
-  }
+      });
+  };
 
   // 看歷史戰鬥
   handleShowHistory = async e => {
