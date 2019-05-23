@@ -9,7 +9,7 @@ export const getProvider = networkId => {
     case '42':
       return 'https://kovan.infura.io/';
     case 101:
-      return 'wss://nodepow.ebakus.com/';
+      return 'wss://node.ebakus.com/';
     default:
       return 'http://localhost:8545/';
   }
@@ -18,7 +18,7 @@ export const getProvider = networkId => {
 export const getRPCProvider = networkId => {
   switch (networkId) {
     case 101:
-      return 'https://nodepowrpc.ebakus.com';
+      return 'https://noderpc.ebakus.com';
     default:
       return getProvider(networkId);
   }
@@ -50,7 +50,7 @@ export const getCryptoHerosTokenAddress = networkId => {
     case '42':
       return '0x0';
     case 101:
-      return '0x395FED8237d4E336f6625E6bb7Dd26384D89daa6';
+      return '0x716Eb384843cd6A990CbF0c34a18940F4e6796aa';
     default:
       return '0x0';
   }
@@ -67,7 +67,7 @@ export const getCryptoHerosGameAddress = networkId => {
     case '42':
       return '0x0';
     case 101:
-      return '0x4A0587BD12ED14d4EE8DFF31406324b8E99a0aA4';
+      return '0xF1dB6d92bb2E672bc892395e9Ddd3E92fb5E7F5E';
     default:
       return '0x0';
   }
