@@ -227,7 +227,8 @@
     flex: 1 1; }
   .battle-result .center {
     flex-direction: column;
-    align-items: center; }
+    align-items: center;
+    text-align: center; }
     .battle-result .center span {
       margin-top: 10px;
       font-size: 32px;

@@ -214,12 +214,15 @@ export default class extends React.Component {
               );
               const gameDetails = await Promise.all(gamePromises);
               const thisGame = gameDetails[gameDetails.length - 1];
-              const userPointer = thisGame[1];
-              const contractPointer = thisGame[2];
-              const userBet = thisGame[3];
-              const gameType = thisGame[4]; // 0 = small win 1 = big win
-              const isWin = thisGame[5]; // 0 win, 1 lost, 2 平手
-              const isUserSmall = userPointer < contractPointer;
+              const userPointer = parseInt(thisGame[1], 10);
+              const contractPointer = parseInt(thisGame[2], 10);
+              const userBet = parseInt(thisGame[3], 10);
+              const gameType = parseInt(thisGame[4], 10); // 0 = small win 1 = big win
+              const isWin = parseInt(thisGame[5], 10); // 0 win, 1 lost, 2 平手
+              let isUserSmall = userPointer < contractPointer;
+              if (gameType == 0) {
+                isUserSmall = userPointer > contractPointer;
+              }
 
               const battleResult = {
                 userPointer,
@@ -400,11 +403,14 @@ export default class extends React.Component {
                   { hasBattleResult && battleResult.isWin <= 1 && <img src={bigImg} /> }
                   { hasBattleResult && battleResult.isWin == 2 && <img src={drawImg} /> }
                 </div>
-                <span className={cx({ big: battleResult.gameType == 1, small: battleResult.gameType == 0})}>
-                  {
-                    battleResult.gameType == 0 ? 'SMALL WIN' : 'BIG WIN'
-                  }
-                </span>
+                {hasBattleResult && battleResult.isWin != 2 &&
+                  <span className={cx({ big: battleResult.gameType == 1, small: battleResult.gameType == 0})}>
+                    {
+                      battleResult.gameType == 0 ? 'WEAK' : 'STRONG'
+                    }
+                    <br />CARD WINS
+                  </span>
+                }
               </div>
               <div className={cx('right')}>
                 <BattleCard
@@ -412,7 +418,7 @@ export default class extends React.Component {
                   isOpenCard={false}
                   bgImg={BG_IMAGES[Math.floor(Math.random() * BG_IMAGES.length)]}
                   pixelImg={ROLE_IMAGES[Math.floor(Math.random() * ROLE_IMAGES.length)]}
-                  numberImg={NUMBER_IMAGES[battleResult.contractPointer - 1]}
+                  numberImg={NUMBER_IMAGES[battleResult.contractPointer ]}
                 />
               </div>
             </div>
