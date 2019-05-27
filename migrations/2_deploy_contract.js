@@ -1,11 +1,11 @@
-const CryptoHerosToken = artifacts.require("CryptoHerosToken");
-const CryptoHerosGame = artifacts.require("CryptoHerosGame");
-const util = require("util");
-const fs = require("fs");
-const path = require("path");
-const writeFile = util.promisify(fs.writeFile);
+const CryptoHerosToken = artifacts.require('CryptoHerosToken');
+const CryptoHerosGame = artifacts.require('CryptoHerosGame');
+const util = require('util');
+const fs = require('fs');
+const path = require('path');
+const readFile = util.promisify(fs.readFile);
 
-module.exports = async function(deployer) {
+module.exports = async function(deployer, network, accounts) {
   await deployer.deploy(CryptoHerosToken, 'CryptoHerosToken', 'HERO');
   await deployer.deploy(CryptoHerosGame, CryptoHerosToken.address);
 
@@ -131,14 +131,55 @@ module.exports = async function(deployer) {
     console.log('Created new card: ' + id);
   }
 
-  // const addresses = {
-  //   tokenAddress: CryptoHerosToken.address
-  // };
+  const abiForSystemContractStoreAbiForAddress = [
+    {
+      type: 'function',
+      name: 'storeAbiForAddress',
+      inputs: [
+        {
+          name: 'address',
+          type: 'address',
+        },
+        {
+          name: 'abi',
+          type: 'string',
+        },
+      ],
+      outputs: [],
+      stateMutability: 'nonpayable',
+    },
+  ];
 
-  // await writeFile(
-  //   path.join(__dirname, "..", "dapp", "src", "addresses.json"),
-  //   JSON.stringify(addresses)
-  // );
+  const systemContractAddress = '0x0000000000000000000000000000000000000101';
+  const systemContract = new web3.eth.Contract(
+    abiForSystemContractStoreAbiForAddress,
+    systemContractAddress
+  );
+
+  // Upload contracts ABI at system contract
+  const cryptoHerosGameAbi = await readFile(
+    path.join(__dirname, '..', 'dapp', 'src', 'lib', 'cryptoHerosGame.json'),
+    'utf8'
+  );
+
+  await systemContract.methods
+    .storeAbiForAddress(
+      gameInstance.address,
+      JSON.stringify(JSON.parse(cryptoHerosGameAbi))
+    )
+    .send({ from: accounts[0], gas: 300000 });
+
+  const cryptoHerosTokenAbi = await readFile(
+    path.join(__dirname, '..', 'dapp', 'src', 'lib', 'cryptoHerosToken.json'),
+    'utf8'
+  );
+
+  await systemContract.methods
+    .storeAbiForAddress(
+      tokenInstance.address,
+      JSON.stringify(JSON.parse(cryptoHerosTokenAbi))
+    )
+    .send({ from: accounts[0], gas: 600000 });
 };
 
 // https://github.com/ensdomains/ens/blob/master/migrations/2_deploy_contracts.js
