@@ -50,7 +50,7 @@ export const getCryptoHerosTokenAddress = networkId => {
     case '42':
       return '0x0';
     case 101:
-      return '0x716Eb384843cd6A990CbF0c34a18940F4e6796aa';
+      return '0x4E8A985Bf89D860fADef5C6D2E51f37799Fd66f9';
     default:
       return '0x0';
   }
@@ -67,7 +67,7 @@ export const getCryptoHerosGameAddress = networkId => {
     case '42':
       return '0x0';
     case 101:
-      return '0xF1dB6d92bb2E672bc892395e9Ddd3E92fb5E7F5E';
+      return '0x77ac86E20C6C3911Be000b190c2FC8FeE34D7abC';
     default:
       return '0x0';
   }
